@@ -8,16 +8,14 @@ export function generateStaticParams() {
   return subjectsData.map((subject) => ({ slug: subject.slug }))
 }
 
-export function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  // We need to handle this synchronously for static generation
-  return params.then(({ slug }) => {
-    const subject = subjectsData.find((s) => s.slug === slug)
-    if (!subject) return { title: 'Matière non trouvée' }
-    return {
-      title: `${subject.name} - Annales Bac corrigées | Neova Education`,
-      description: `Annales corrigées de ${subject.name} au Bac. Sujets classés par chapitre, quiz interactifs et correction par IA. 100% gratuit.`,
-    }
-  })
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const subject = subjectsData.find((s) => s.slug === slug)
+  if (!subject) return { title: 'Matière non trouvée' }
+  return {
+    title: `${subject.name} - Annales Bac corrigées | Neova Education`,
+    description: `Annales corrigées de ${subject.name} au Bac. Sujets classés par chapitre, quiz interactifs et correction par IA. 100% gratuit.`,
+  }
 }
 
 // Example chapters data (will come from Supabase later)

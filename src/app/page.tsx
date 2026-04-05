@@ -80,12 +80,12 @@ export default function HomePage() {
               100% gratuit — Aucun abonnement
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
-              Réussis ton Bac avec{' '}
-              <span className="text-primary">l&apos;IA</span>
+              Décroche ton Bac{' '}
+              <span className="text-primary">sans stresser</span>
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
-              Annales corrigées, quiz interactifs et correction par intelligence artificielle.
-              Toutes les matières du Bac 2026, entièrement gratuites.
+              +500 annales corrigées, quiz personnalisés et correction instantanée.
+              La méthode utilisée par les lycéens qui réussissent.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
@@ -252,10 +252,10 @@ export default function HomePage() {
       <section className="py-16 sm:py-20 bg-gradient-to-r from-primary to-indigo-700">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Prêt(e) à décrocher ton Bac ?
+            Ne laisse rien au hasard
           </h2>
           <p className="text-indigo-100 text-lg mb-8">
-            Rejoins des milliers de lycéens qui révisent gratuitement avec Neova Education.
+            Rejoins les lycéens qui prennent de l&apos;avance. Annales, quiz, corrections — tout est prêt pour toi.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
