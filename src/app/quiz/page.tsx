@@ -1,89 +1,84 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { CheckCircle, XCircle, ArrowRight, RotateCcw } from 'lucide-react'
-import { subjectsData } from '@/lib/subjects-data'
+import { CheckCircle, XCircle, ArrowRight, RotateCcw, Loader2 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 import { SubjectIcon } from '@/components/SubjectIcon'
+import { subjectsData } from '@/lib/subjects-data'
 
-const exampleQuestions: Record<string, { question: string; options: string[]; correct: number; explanation: string }[]> = {
-  mathematiques: [
-    {
-      question: 'Quelle est la dérivée de f(x) = x\u00b3 + 2x\u00b2 - 5x + 1 ?',
-      options: ['3x\u00b2 + 4x - 5', '3x\u00b2 + 2x - 5', 'x\u2074 + 2x\u00b3 - 5x\u00b2', '3x\u00b2 + 4x + 5'],
-      correct: 0,
-      explanation: 'On applique les règles de dérivation : (x\u00b3)\' = 3x\u00b2, (2x\u00b2)\' = 4x, (-5x)\' = -5, (1)\' = 0.',
-    },
-    {
-      question: 'La suite (Un) definie par Un+1 = 2Un - 3 avec U0 = 5 est :',
-      options: ['Arithmetique', 'Geometrique', 'Ni l\'un ni l\'autre', 'Constante'],
-      correct: 2,
-      explanation: 'Cette suite n\'est ni arithmetique (Un+1 - Un n\'est pas constant) ni geometrique (Un+1/Un n\'est pas constant).',
-    },
-    {
-      question: 'Quelle est la limite de (2n\u00b2 + 3n) / (n\u00b2 - 1) quand n tend vers +\u221e ?',
-      options: ['0', '1', '2', '+\u221e'],
-      correct: 2,
-      explanation: 'On divise numerateur et denominateur par n\u00b2 : (2 + 3/n) / (1 - 1/n\u00b2) \u2192 2/1 = 2.',
-    },
-  ],
-  'physique-chimie': [
-    {
-      question: 'Quelle est l\'unite de la force dans le systeme international ?',
-      options: ['Joule', 'Newton', 'Pascal', 'Watt'],
-      correct: 1,
-      explanation: 'Le Newton (N) est l\'unite de force. 1 N = 1 kg\u00b7m\u00b7s\u207b\u00b2.',
-    },
-    {
-      question: 'La relation entre l\'energie cinetique et la vitesse est :',
-      options: ['Ec = mv', 'Ec = \u00bdmv\u00b2', 'Ec = mv\u00b2', 'Ec = \u00bdmv'],
-      correct: 1,
-      explanation: 'L\'energie cinetique est Ec = \u00bdmv\u00b2, elle est proportionnelle au carre de la vitesse.',
-    },
-  ],
-  ses: [
-    {
-      question: 'Le PIB mesure :',
-      options: [
-        'La richesse totale d\'un pays',
-        'La production de biens et services sur un territoire pendant un an',
-        'Le niveau de vie des habitants',
-        'Les echanges commerciaux internationaux',
-      ],
-      correct: 1,
-      explanation: 'Le PIB mesure la valeur ajoutee des biens et services produits sur un territoire pendant une periode donnee.',
-    },
-  ],
-  philosophie: [
-    {
-      question: 'Selon Descartes, quelle est la premiere certitude ?',
-      options: [
-        'Dieu existe',
-        'Le monde exterieur existe',
-        'Je pense, donc je suis',
-        'Les sens ne trompent jamais',
-      ],
-      correct: 2,
-      explanation: 'Le cogito est la premiere certitude que Descartes etablit dans les Meditations metaphysiques.',
-    },
-  ],
+interface QuizQ {
+  id: string
+  question: string
+  options: string[]
+  correct_answer: number
+  explanation: string | null
+  difficulty: number
+  chapter_name?: string
+}
+
+interface Chapter {
+  id: string
+  name: string
+  slug: string
 }
 
 export default function QuizPage() {
+  const [step, setStep] = useState<'subject' | 'chapter' | 'quiz' | 'result'>('subject')
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
+  const [chapters, setChapters] = useState<Chapter[]>([])
+  const [selectedChapter, setSelectedChapter] = useState<string | null>(null)
+  const [questions, setQuestions] = useState<QuizQ[]>([])
   const [currentQ, setCurrentQ] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
   const [score, setScore] = useState(0)
-  const [finished, setFinished] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const questions = selectedSubject ? (exampleQuestions[selectedSubject] || exampleQuestions.mathematiques) : []
+  // Load chapters when subject is selected
+  useEffect(() => {
+    if (!selectedSubject) return
+    const loadChapters = async () => {
+      const { data } = await supabase
+        .from('chapters')
+        .select('id, name, slug')
+        .eq('subject_id', selectedSubject)
+        .order('sort_order')
+      if (data) setChapters(data)
+    }
+    loadChapters()
+  }, [selectedSubject])
+
+  // Load questions
+  const loadQuestions = useCallback(async (chapterId: string | null) => {
+    setLoading(true)
+    let query = supabase
+      .from('quiz_questions')
+      .select('id, question, options, correct_answer, explanation, difficulty')
+      .eq('subject_id', selectedSubject!)
+
+    if (chapterId) {
+      query = query.eq('chapter_id', chapterId)
+    }
+
+    const { data } = await query.order('difficulty').limit(15)
+    if (data) {
+      // Shuffle questions
+      const shuffled = data.sort(() => Math.random() - 0.5)
+      setQuestions(shuffled.map(q => ({
+        ...q,
+        options: q.options as string[],
+      })))
+    }
+    setLoading(false)
+    setStep('quiz')
+  }, [selectedSubject])
 
   const handleAnswer = (index: number) => {
     if (showExplanation) return
     setSelectedAnswer(index)
     setShowExplanation(true)
-    if (index === questions[currentQ].correct) setScore(score + 1)
+    if (index === questions[currentQ].correct_answer) setScore(score + 1)
   }
 
   const nextQuestion = () => {
@@ -92,7 +87,7 @@ export default function QuizPage() {
       setSelectedAnswer(null)
       setShowExplanation(false)
     } else {
-      setFinished(true)
+      setStep('result')
     }
   }
 
@@ -101,28 +96,41 @@ export default function QuizPage() {
     setSelectedAnswer(null)
     setShowExplanation(false)
     setScore(0)
-    setFinished(false)
+    setStep('subject')
+    setSelectedSubject(null)
+    setSelectedChapter(null)
+    setQuestions([])
+    setChapters([])
   }
 
-  if (!selectedSubject) {
+  // Step 1: Choose subject
+  if (step === 'subject') {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <h1 className="text-2xl font-bold mb-1">Quiz</h1>
-        <p className="text-gray-500 text-sm mb-8">Choisis une matière pour commencer</p>
+        <h1 className="font-serif text-2xl font-bold text-encre mb-1">Quiz</h1>
+        <p className="text-sm text-muted mb-8">Choisis une matière pour commencer</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {subjectsData.map((subject) => (
             <button
               key={subject.slug}
-              onClick={() => setSelectedSubject(subject.slug)}
-              className="group flex items-center gap-3 p-3.5 rounded-lg border border-gray-100 hover:border-gray-300 transition-colors text-left"
+              onClick={async () => {
+                // Get the subject ID from Supabase
+                const { data } = await supabase
+                  .from('subjects')
+                  .select('id')
+                  .eq('slug', subject.slug)
+                  .single()
+                if (data) {
+                  setSelectedSubject(data.id)
+                  setStep('chapter')
+                }
+              }}
+              className="group flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border hover:border-skolr-blue/30 transition-colors text-left"
             >
-              <div
-                className="flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0"
-                style={{ backgroundColor: subject.color + '15', color: subject.color }}
-              >
+              <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-skolr-blue/10 text-skolr-blue flex-shrink-0">
                 <SubjectIcon name={subject.icon} className="h-4 w-4" />
               </div>
-              <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+              <span className="text-sm font-medium text-encre group-hover:text-skolr-blue transition-colors">
                 {subject.name}
               </span>
             </button>
@@ -132,41 +140,113 @@ export default function QuizPage() {
     )
   }
 
-  const subject = subjectsData.find((s) => s.slug === selectedSubject)!
+  // Step 2: Choose chapter
+  if (step === 'chapter') {
+    return (
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
+        <button onClick={restart} className="text-sm text-muted hover:text-encre mb-6 block">
+          &larr; Retour aux matières
+        </button>
+        <h1 className="font-serif text-2xl font-bold text-encre mb-1">Choisis un chapitre</h1>
+        <p className="text-sm text-muted mb-6">Ou lance un quiz sur tous les chapitres</p>
 
-  if (finished) {
+        <button
+          onClick={() => loadQuestions(null)}
+          className="w-full mb-4 p-4 rounded-xl bg-skolr-blue text-white font-medium text-sm hover:bg-skolr-blue/90 transition-colors"
+        >
+          Tous les chapitres (quiz complet)
+        </button>
+
+        {chapters.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-muted text-sm">Aucun chapitre disponible pour cette matière pour le moment.</p>
+            <button onClick={restart} className="mt-4 text-sm text-skolr-blue hover:underline">
+              Choisir une autre matière
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {chapters.map((chapter) => (
+              <button
+                key={chapter.id}
+                onClick={() => {
+                  setSelectedChapter(chapter.id)
+                  loadQuestions(chapter.id)
+                }}
+                className="w-full text-left p-3.5 rounded-xl bg-white border border-border hover:border-skolr-blue/30 transition-colors text-sm font-medium text-encre hover:text-skolr-blue"
+              >
+                {chapter.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Loading
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-6 w-6 text-skolr-blue animate-spin" />
+      </div>
+    )
+  }
+
+  // No questions found
+  if (step === 'quiz' && questions.length === 0) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-16 text-center">
+        <h2 className="font-serif text-xl font-bold text-encre mb-2">Pas encore de questions</h2>
+        <p className="text-sm text-muted mb-6">Ce chapitre n&apos;a pas encore de quiz disponible.</p>
+        <button onClick={restart} className="px-4 py-2 text-sm font-medium bg-encre text-creme rounded-lg hover:bg-encre/90">
+          Retour
+        </button>
+      </div>
+    )
+  }
+
+  // Step 4: Results
+  if (step === 'result') {
     const percentage = Math.round((score / questions.length) * 100)
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold mb-2">Quiz terminé</h1>
-        <p className="text-sm text-gray-500 mb-6">{subject.name}</p>
-        <div className="text-4xl font-bold text-gray-900 mb-2">
+        <h1 className="font-serif text-2xl font-bold text-encre mb-2">Quiz terminé</h1>
+        <div className="text-4xl font-bold text-encre my-4">
           {score} / {questions.length}
         </div>
-        <p className="text-sm text-gray-500 mb-8">
+        <p className="text-sm text-muted mb-8">
           {percentage >= 80
-            ? 'Excellent, tu maîtrises bien ce sujet.'
+            ? 'Excellent, tu maîtrises bien ce sujet !'
             : percentage >= 50
             ? 'Pas mal, continue de t\'entraîner.'
             : 'Continue de réviser, tu vas progresser.'}
         </p>
         <div className="flex items-center justify-center gap-3">
           <button
-            onClick={restart}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+            onClick={() => {
+              setCurrentQ(0)
+              setSelectedAnswer(null)
+              setShowExplanation(false)
+              setScore(0)
+              // Reshuffle
+              setQuestions(q => [...q].sort(() => Math.random() - 0.5))
+              setStep('quiz')
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-skolr-blue text-white rounded-lg hover:bg-skolr-blue/90"
           >
             <RotateCcw className="h-4 w-4" />
             Refaire
           </button>
           <button
-            onClick={() => { setSelectedSubject(null); restart() }}
-            className="px-4 py-2 text-sm font-medium border border-gray-200 rounded-lg hover:bg-gray-50"
+            onClick={restart}
+            className="px-4 py-2 text-sm font-medium border border-border rounded-lg hover:bg-surface"
           >
             Autre matière
           </button>
           <Link
             href="/inscription"
-            className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-900"
+            className="px-4 py-2 text-sm font-medium text-muted hover:text-encre"
           >
             Sauvegarder
           </Link>
@@ -175,75 +255,72 @@ export default function QuizPage() {
     )
   }
 
+  // Step 3: Quiz in progress
   const q = questions[currentQ]
 
   return (
     <div className="max-w-xl mx-auto px-4 py-12">
       <div className="flex items-center justify-between mb-6">
-        <button
-          onClick={() => { setSelectedSubject(null); restart() }}
-          className="text-sm text-gray-400 hover:text-gray-600"
-        >
-          &larr; Matières
+        <button onClick={restart} className="text-sm text-muted hover:text-encre">
+          &larr; Quitter
         </button>
-        <span className="text-sm text-gray-400">{subject.name}</span>
       </div>
 
       <div className="mb-8">
-        <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+        <div className="flex items-center justify-between text-xs text-muted mb-2">
           <span>{currentQ + 1} / {questions.length}</span>
           <span>Score : {score}</span>
         </div>
-        <div className="h-1 bg-gray-100 rounded-full">
+        <div className="h-1 bg-surface rounded-full">
           <div
-            className="h-1 bg-gray-900 rounded-full transition-all"
+            className="h-1 bg-skolr-blue rounded-full transition-all"
             style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}
           />
         </div>
       </div>
 
-      <h2 className="text-lg font-semibold mb-6">{q.question}</h2>
+      <h2 className="font-serif text-lg font-semibold text-encre mb-6">{q.question}</h2>
 
       <div className="space-y-2 mb-6">
         {q.options.map((option, i) => {
-          let cls = 'border-gray-100 hover:border-gray-300'
+          let cls = 'border-border hover:border-skolr-blue/30 bg-white'
           if (showExplanation) {
-            if (i === q.correct) cls = 'border-green-500 bg-green-50'
-            else if (i === selectedAnswer) cls = 'border-red-400 bg-red-50'
-            else cls = 'border-gray-100 opacity-40'
+            if (i === q.correct_answer) cls = 'border-success bg-success/5'
+            else if (i === selectedAnswer) cls = 'border-alert bg-alert/5'
+            else cls = 'border-border opacity-40 bg-white'
           }
           return (
             <button
               key={i}
               onClick={() => handleAnswer(i)}
               disabled={showExplanation}
-              className={`w-full text-left p-3.5 rounded-lg border transition-all text-sm flex items-center gap-3 ${cls}`}
+              className={`w-full text-left p-3.5 rounded-xl border transition-all text-sm flex items-center gap-3 ${cls}`}
             >
-              <span className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-gray-50 text-xs font-medium text-gray-500">
+              <span className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-surface text-xs font-medium text-muted">
                 {String.fromCharCode(65 + i)}
               </span>
-              <span className="flex-1 text-gray-700">{option}</span>
-              {showExplanation && i === q.correct && <CheckCircle className="h-4 w-4 text-green-600" />}
-              {showExplanation && i === selectedAnswer && i !== q.correct && <XCircle className="h-4 w-4 text-red-500" />}
+              <span className="flex-1 text-encre">{option}</span>
+              {showExplanation && i === q.correct_answer && <CheckCircle className="h-4 w-4 text-success" />}
+              {showExplanation && i === selectedAnswer && i !== q.correct_answer && <XCircle className="h-4 w-4 text-alert" />}
             </button>
           )
         })}
       </div>
 
-      {showExplanation && (
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <p className="text-sm text-gray-600">{q.explanation}</p>
+      {showExplanation && q.explanation && (
+        <div className="bg-surface rounded-xl p-4 mb-6">
+          <p className="text-sm text-body">{q.explanation}</p>
         </div>
       )}
 
       {showExplanation && (
         <button
           onClick={nextQuestion}
-          className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 flex items-center justify-center gap-2"
+          className="w-full py-2.5 bg-encre text-creme text-sm font-medium rounded-lg hover:bg-encre/90 flex items-center justify-center gap-2"
         >
           {currentQ < questions.length - 1 ? (
             <>Suivante <ArrowRight className="h-4 w-4" /></>
-          ) : 'Résultats'}
+          ) : 'Voir les résultats'}
         </button>
       )}
     </div>
