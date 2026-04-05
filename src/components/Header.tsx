@@ -8,24 +8,24 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <header className="sticky top-0 z-50 bg-creme/80 backdrop-blur-md border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14">
-          <Link href="/" className="text-lg font-bold tracking-tight text-gray-900">
-            skolr
+          <Link href="/" className="font-serif text-xl font-bold tracking-tight text-encre">
+            Skol<span className="text-skolr-blue">r</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-sm">
-            <Link href="/matieres" className="text-gray-500 hover:text-gray-900 transition-colors">
-              Matières
+            <Link href="/matieres" className="text-muted hover:text-encre transition-colors">
+              Matieres
             </Link>
-            <Link href="/annales" className="text-gray-500 hover:text-gray-900 transition-colors">
+            <Link href="/annales" className="text-muted hover:text-encre transition-colors">
               Annales
             </Link>
-            <Link href="/quiz" className="text-gray-500 hover:text-gray-900 transition-colors">
+            <Link href="/quiz" className="text-muted hover:text-encre transition-colors">
               Quiz
             </Link>
-            <Link href="/orientation" className="text-gray-500 hover:text-gray-900 transition-colors">
+            <Link href="/orientation" className="text-muted hover:text-encre transition-colors">
               Orientation
             </Link>
           </nav>
@@ -33,14 +33,14 @@ export function Header() {
           <div className="hidden md:block">
             <Link
               href="/inscription"
-              className="text-sm font-medium px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+              className="text-sm font-medium px-4 py-2 bg-encre text-creme rounded-lg hover:bg-encre/90 transition-colors"
             >
               S&apos;inscrire
             </Link>
           </div>
 
           <button
-            className="md:hidden p-1.5 text-gray-500"
+            className="md:hidden p-1.5 text-muted"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -49,13 +49,13 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white">
+        <div className="md:hidden border-t border-border bg-creme">
           <div className="px-4 py-3 space-y-1">
-            {['Matières', 'Annales', 'Quiz', 'Orientation'].map((item) => (
+            {['Matieres', 'Annales', 'Quiz', 'Orientation'].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}
-                className="block py-2 text-sm text-gray-600"
+                className="block py-2 text-sm text-body"
                 onClick={() => setMobileOpen(false)}
               >
                 {item}
@@ -63,7 +63,7 @@ export function Header() {
             ))}
             <Link
               href="/inscription"
-              className="block mt-2 text-center py-2 text-sm font-medium bg-gray-900 text-white rounded-lg"
+              className="block mt-2 text-center py-2 text-sm font-medium bg-encre text-creme rounded-lg"
               onClick={() => setMobileOpen(false)}
             >
               S&apos;inscrire

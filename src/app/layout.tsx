@@ -1,32 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const dmMono = DM_Mono({
+  variable: "--font-dm-mono",
   subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
-  title: "Skolr - Annales du Bac gratuites et corrigées",
+  title: "Skolr - Annales du Bac gratuites et corrigees",
   description:
-    "Révise le Bac avec des annales corrigées 100% gratuites. Quiz interactifs, toutes les matières. Bac 2026.",
-  keywords: [
-    "annales bac",
-    "bac 2026",
-    "annales corrigées",
-    "révision bac",
-    "quiz bac",
-    "maths bac",
-    "physique chimie bac",
-  ],
+    "Revise le Bac avec des annales corrigees 100% gratuites. Quiz interactifs, toutes les matieres. Bac 2026.",
 };
 
 export default function RootLayout({
@@ -37,9 +30,9 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${dmMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-white text-gray-900">
+      <body className="min-h-full flex flex-col">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
