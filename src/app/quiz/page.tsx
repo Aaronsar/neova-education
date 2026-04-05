@@ -9,10 +9,10 @@ import { SubjectIcon } from '@/components/SubjectIcon'
 const exampleQuestions: Record<string, { question: string; options: string[]; correct: number; explanation: string }[]> = {
   mathematiques: [
     {
-      question: 'Quelle est la derivee de f(x) = x\u00b3 + 2x\u00b2 - 5x + 1 ?',
+      question: 'Quelle est la dérivée de f(x) = x\u00b3 + 2x\u00b2 - 5x + 1 ?',
       options: ['3x\u00b2 + 4x - 5', '3x\u00b2 + 2x - 5', 'x\u2074 + 2x\u00b3 - 5x\u00b2', '3x\u00b2 + 4x + 5'],
       correct: 0,
-      explanation: 'On applique les regles de derivation : (x\u00b3)\' = 3x\u00b2, (2x\u00b2)\' = 4x, (-5x)\' = -5, (1)\' = 0.',
+      explanation: 'On applique les règles de dérivation : (x\u00b3)\' = 3x\u00b2, (2x\u00b2)\' = 4x, (-5x)\' = -5, (1)\' = 0.',
     },
     {
       question: 'La suite (Un) definie par Un+1 = 2Un - 3 avec U0 = 5 est :',
@@ -108,7 +108,7 @@ export default function QuizPage() {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
         <h1 className="text-2xl font-bold mb-1">Quiz</h1>
-        <p className="text-gray-500 text-sm mb-8">Choisis une matiere pour commencer</p>
+        <p className="text-gray-500 text-sm mb-8">Choisis une matière pour commencer</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {subjectsData.map((subject) => (
             <button
@@ -138,17 +138,17 @@ export default function QuizPage() {
     const percentage = Math.round((score / questions.length) * 100)
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold mb-2">Quiz termine</h1>
+        <h1 className="text-2xl font-bold mb-2">Quiz terminé</h1>
         <p className="text-sm text-gray-500 mb-6">{subject.name}</p>
         <div className="text-4xl font-bold text-gray-900 mb-2">
           {score} / {questions.length}
         </div>
         <p className="text-sm text-gray-500 mb-8">
           {percentage >= 80
-            ? 'Excellent, tu maitrises bien ce sujet.'
+            ? 'Excellent, tu maîtrises bien ce sujet.'
             : percentage >= 50
-            ? 'Pas mal, continue de t\'entrainer.'
-            : 'Continue de reviser, tu vas progresser.'}
+            ? 'Pas mal, continue de t\'entraîner.'
+            : 'Continue de réviser, tu vas progresser.'}
         </p>
         <div className="flex items-center justify-center gap-3">
           <button
@@ -162,7 +162,7 @@ export default function QuizPage() {
             onClick={() => { setSelectedSubject(null); restart() }}
             className="px-4 py-2 text-sm font-medium border border-gray-200 rounded-lg hover:bg-gray-50"
           >
-            Autre matiere
+            Autre matière
           </button>
           <Link
             href="/inscription"
@@ -243,7 +243,7 @@ export default function QuizPage() {
         >
           {currentQ < questions.length - 1 ? (
             <>Suivante <ArrowRight className="h-4 w-4" /></>
-          ) : 'Resultats'}
+          ) : 'Résultats'}
         </button>
       )}
     </div>

@@ -186,7 +186,7 @@ export default function OrientationPage() {
       <div className="mb-10">
         <h1 className="text-2xl font-bold mb-1">Orientation</h1>
         <p className="text-sm text-gray-500">
-          Decouvre les parcours post-bac qui te correspondent en 5 questions
+          Découvre les parcours post-bac qui te correspondent en 5 questions
         </p>
       </div>
 

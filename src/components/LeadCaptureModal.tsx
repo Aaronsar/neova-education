@@ -72,7 +72,7 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
       <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-5 border-b border-gray-100">
           <h2 className="text-base font-semibold text-gray-900">
-            {success ? 'Bienvenue' : 'Creer un compte'}
+            {success ? 'Bienvenue' : 'Créer un compte'}
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X className="h-5 w-5" />
@@ -82,9 +82,9 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
         {success ? (
           <div className="p-6 text-center">
             <CheckCircle className="h-10 w-10 text-green-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Compte cree</h3>
+            <h3 className="text-lg font-semibold mb-2">Compte créé</h3>
             <p className="text-sm text-gray-500 mb-6">
-              Tu as maintenant acces a toutes les fonctionnalites.
+              Tu as maintenant accès à toutes les fonctionnalités.
             </p>
             <button
               onClick={onClose}
@@ -98,16 +98,16 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
             {step === 1 && (
               <div className="space-y-4">
                 <p className="text-sm text-gray-500">
-                  Inscris-toi pour sauvegarder ta progression et acceder aux corrections.
+                  Inscris-toi pour sauvegarder ta progression et accéder aux corrections.
                 </p>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Prenom</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
                   <input
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:border-gray-400 outline-none text-sm"
-                    placeholder="Ton prenom"
+                    placeholder="Ton prénom"
                   />
                 </div>
                 <div>
@@ -123,7 +123,7 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Telephone <span className="text-gray-400">(optionnel)</span>
+                    Téléphone <span className="text-gray-400">(optionnel)</span>
                   </label>
                   <input
                     type="tel"
@@ -158,14 +158,14 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
                             : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
                         }`}
                       >
-                        {lvl === 'premiere' ? 'Premiere' : lvl.charAt(0).toUpperCase() + lvl.slice(1)}
+                        {lvl === 'premiere' ? 'Première' : lvl.charAt(0).toUpperCase() + lvl.slice(1)}
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Specialites</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Spécialités</label>
                   <div className="flex flex-wrap gap-1.5">
                     {specialiteOptions.map((s) => (
                       <button
@@ -220,7 +220,7 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
                     disabled={loading}
                     className="flex-1 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
                   >
-                    {loading ? 'Inscription...' : 'Creer mon compte'}
+                    {loading ? 'Inscription...' : 'Créer mon compte'}
                   </button>
                 </div>
               </div>

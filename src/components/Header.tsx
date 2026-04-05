@@ -17,7 +17,7 @@ export function Header() {
 
           <nav className="hidden md:flex items-center gap-6 text-sm">
             <Link href="/matieres" className="text-muted hover:text-encre transition-colors">
-              Matieres
+              Matières
             </Link>
             <Link href="/annales" className="text-muted hover:text-encre transition-colors">
               Annales
@@ -51,7 +51,7 @@ export function Header() {
       {mobileOpen && (
         <div className="md:hidden border-t border-border bg-creme">
           <div className="px-4 py-3 space-y-1">
-            {['Matieres', 'Annales', 'Quiz', 'Orientation'].map((item) => (
+            {['Matières', 'Annales', 'Quiz', 'Orientation'].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}

@@ -76,30 +76,27 @@ export default async function SubjectPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-      <nav className="text-sm text-gray-400 mb-8">
-        <Link href="/" className="hover:text-gray-600">Accueil</Link>
+      <nav className="text-sm text-muted mb-8">
+        <Link href="/" className="hover:text-encre">Accueil</Link>
         <span className="mx-2">/</span>
-        <Link href="/matieres" className="hover:text-gray-600">Matières</Link>
+        <Link href="/matieres" className="hover:text-encre">Matières</Link>
         <span className="mx-2">/</span>
-        <span className="text-gray-900">{subject.name}</span>
+        <span className="text-encre">{subject.name}</span>
       </nav>
 
       <div className="flex items-center gap-3 mb-10">
-        <div
-          className="flex items-center justify-center w-11 h-11 rounded-lg"
-          style={{ backgroundColor: subject.color + '15', color: subject.color }}
-        >
+        <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-skolr-blue/10 text-skolr-blue">
           <SubjectIcon name={subject.icon} className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold">{subject.name}</h1>
-          <p className="text-sm text-gray-400">{subject.description}</p>
+          <h1 className="font-serif text-2xl font-bold text-encre">{subject.name}</h1>
+          <p className="text-sm text-muted">{subject.description}</p>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2">
-          <h2 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
+          <h2 className="text-xs font-medium text-muted uppercase tracking-widest mb-4">
             Chapitres
           </h2>
           <div className="space-y-2">
@@ -107,17 +104,17 @@ export default async function SubjectPage({ params }: { params: Promise<{ slug: 
               <Link
                 key={chapter.slug}
                 href={`/matieres/${slug}/${chapter.slug}`}
-                className="group flex items-center justify-between p-3.5 rounded-lg border border-gray-100 hover:border-gray-300 transition-colors"
+                className="group flex items-center justify-between p-3.5 rounded-xl bg-white border border-border hover:border-skolr-blue/30 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-medium text-gray-300 w-5 text-right">
+                  <span className="text-xs font-medium text-muted w-5 text-right">
                     {i + 1}
                   </span>
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                  <span className="text-sm font-medium text-encre group-hover:text-skolr-blue transition-colors">
                     {chapter.name}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-gray-300">
+                <div className="flex items-center gap-3 text-xs text-muted">
                   <span>{chapter.annalesCount} annales</span>
                   <span>{chapter.quizCount} quiz</span>
                 </div>
@@ -127,21 +124,21 @@ export default async function SubjectPage({ params }: { params: Promise<{ slug: 
         </div>
 
         <div>
-          <h2 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
+          <h2 className="text-xs font-medium text-muted uppercase tracking-widest mb-4">
             Dernières annales
           </h2>
           <div className="space-y-2">
             {exampleAnnales.map((annale, i) => (
               <div
                 key={i}
-                className="p-3.5 rounded-lg border border-gray-100 hover:border-gray-300 transition-colors cursor-pointer"
+                className="p-3.5 rounded-xl bg-white border border-border hover:border-skolr-blue/30 transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <FileText className="h-3.5 w-3.5 text-gray-300" />
-                  <span className="text-xs font-medium text-gray-400">{annale.year}</span>
+                  <FileText className="h-3.5 w-3.5 text-skolr-blue" />
+                  <span className="text-xs font-medium text-skolr-blue">{annale.year}</span>
                 </div>
-                <h3 className="text-sm font-medium text-gray-700">{annale.title}</h3>
-                <p className="text-xs text-gray-400">{annale.session}</p>
+                <h3 className="text-sm font-medium text-encre">{annale.title}</h3>
+                <p className="text-xs text-muted">{annale.session}</p>
               </div>
             ))}
           </div>

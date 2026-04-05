@@ -10,10 +10,10 @@ export function Footer() {
           </span>
           <div className="flex gap-6 text-sm text-muted">
             <Link href="/mentions-legales" className="hover:text-encre transition-colors">
-              Mentions legales
+              Mentions légales
             </Link>
             <Link href="/confidentialite" className="hover:text-encre transition-colors">
-              Confidentialite
+              Confidentialité
             </Link>
           </div>
         </div>
