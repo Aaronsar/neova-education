@@ -15,20 +15,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Neova Education - Annales du Bac gratuites + Correction IA",
+  title: "Skolr - Annales du Bac gratuites et corrigées",
   description:
-    "Révise le Bac avec des annales corrigées 100% gratuites. Correction par IA, quiz interactifs, toutes les matières. Prépare ton Bac 2026 efficacement.",
+    "Révise le Bac avec des annales corrigées 100% gratuites. Quiz interactifs, toutes les matières. Bac 2026.",
   keywords: [
     "annales bac",
     "bac 2026",
     "annales corrigées",
     "révision bac",
-    "correction IA",
     "quiz bac",
     "maths bac",
     "physique chimie bac",
-    "philosophie bac",
-    "SES bac",
   ],
 };
 
@@ -42,7 +39,7 @@ export default function RootLayout({
       lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-white text-gray-900">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

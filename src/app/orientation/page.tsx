@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Compass, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react'
+import { ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react'
 
 const questions = [
   {
@@ -172,7 +172,7 @@ export default function OrientationPage() {
           source: 'orientation_quiz',
         }),
       })
-      localStorage.setItem('neova_lead', email)
+      localStorage.setItem('skolr_lead', email)
       setLeadSaved(true)
     } catch {
       // silent
@@ -183,16 +183,10 @@ export default function OrientationPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
-      {/* Header */}
-      <div className="text-center mb-10">
-        <div className="inline-flex items-center justify-center w-14 h-14 bg-primary/10 rounded-full mb-4">
-          <Compass className="h-7 w-7 text-primary" />
-        </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Quiz d&apos;orientation
-        </h1>
-        <p className="text-gray-600">
-          Découvre les parcours post-bac qui te correspondent en 5 questions
+      <div className="mb-10">
+        <h1 className="text-2xl font-bold mb-1">Orientation</h1>
+        <p className="text-sm text-gray-500">
+          Decouvre les parcours post-bac qui te correspondent en 5 questions
         </p>
       </div>
 

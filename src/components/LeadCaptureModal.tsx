@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Sparkles } from 'lucide-react'
+import { X, CheckCircle } from 'lucide-react'
 
 interface LeadCaptureModalProps {
   isOpen: boolean
   onClose: () => void
-  trigger?: string // what triggered the modal
+  trigger?: string
 }
 
 export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalProps) {
@@ -26,16 +26,8 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
   if (!isOpen) return null
 
   const specialiteOptions = [
-    'Mathématiques',
-    'Physique-Chimie',
-    'SVT',
-    'SES',
-    'HGGSP',
-    'NSI',
-    'LLCE Anglais',
-    'HLP',
-    'Sciences de l\'Ingénieur',
-    'Arts',
+    'Mathematiques', 'Physique-Chimie', 'SVT', 'SES', 'HGGSP',
+    'NSI', 'LLCE Anglais', 'HLP', 'Sciences de l\'Ingenieur', 'Arts',
   ]
 
   const toggleSpecialite = (s: string) => {
@@ -66,27 +58,22 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
       })
       if (res.ok) {
         setSuccess(true)
-        // Store in localStorage so we don't ask again
-        localStorage.setItem('neova_lead', formData.email)
+        localStorage.setItem('skolr_lead', formData.email)
       }
     } catch {
-      // silently fail
+      // silent
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-bold text-gray-900">
-              {success ? 'Bienvenue !' : 'Crée ton compte gratuit'}
-            </h2>
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-5 border-b border-gray-100">
+          <h2 className="text-base font-semibold text-gray-900">
+            {success ? 'Bienvenue' : 'Creer un compte'}
+          </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X className="h-5 w-5" />
           </button>
@@ -94,74 +81,62 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
 
         {success ? (
           <div className="p-6 text-center">
-            <div className="text-5xl mb-4">🎉</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              Ton compte est créé !
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Tu as maintenant accès à toutes les corrections IA et quiz personnalisés.
+            <CheckCircle className="h-10 w-10 text-green-600 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Compte cree</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Tu as maintenant acces a toutes les fonctionnalites.
             </p>
             <button
               onClick={onClose}
-              className="px-6 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition-colors"
+              className="px-5 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800"
             >
-              Commencer à réviser
+              Commencer
             </button>
           </div>
         ) : (
           <div className="p-5">
             {step === 1 && (
               <div className="space-y-4">
-                <p className="text-sm text-gray-600">
-                  Inscris-toi pour accéder aux corrections IA, sauvegarder ta progression et recevoir un planning de révision personnalisé.
+                <p className="text-sm text-gray-500">
+                  Inscris-toi pour sauvegarder ta progression et acceder aux corrections.
                 </p>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Prénom
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Prenom</label>
                   <input
                     type="text"
                     value={formData.firstName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, firstName: e.target.value })
-                    }
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
-                    placeholder="Ton prénom"
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:border-gray-400 outline-none text-sm"
+                    placeholder="Ton prenom"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:border-gray-400 outline-none text-sm"
                     placeholder="ton.email@exemple.com"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Téléphone <span className="text-gray-400">(optionnel)</span>
+                    Telephone <span className="text-gray-400">(optionnel)</span>
                   </label>
                   <input
                     type="tel"
                     value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:border-gray-400 outline-none text-sm"
                     placeholder="06 12 34 56 78"
                   />
                 </div>
                 <button
                   onClick={() => setStep(2)}
                   disabled={!formData.email}
-                  className="w-full py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
                 >
                   Continuer
                 </button>
@@ -171,9 +146,7 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
             {step === 2 && (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tu es en...
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Niveau</label>
                   <div className="grid grid-cols-3 gap-2">
                     {['seconde', 'premiere', 'terminale'].map((lvl) => (
                       <button
@@ -181,31 +154,27 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
                         onClick={() => setFormData({ ...formData, level: lvl })}
                         className={`py-2 px-3 rounded-lg border text-sm font-medium transition-colors ${
                           formData.level === lvl
-                            ? 'bg-primary text-white border-primary'
-                            : 'bg-white text-gray-700 border-gray-300 hover:border-primary'
+                            ? 'bg-gray-900 text-white border-gray-900'
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
                         }`}
                       >
-                        {lvl === 'premiere'
-                          ? 'Première'
-                          : lvl.charAt(0).toUpperCase() + lvl.slice(1)}
+                        {lvl === 'premiere' ? 'Premiere' : lvl.charAt(0).toUpperCase() + lvl.slice(1)}
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tes spécialités
-                  </label>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Specialites</label>
+                  <div className="flex flex-wrap gap-1.5">
                     {specialiteOptions.map((s) => (
                       <button
                         key={s}
                         onClick={() => toggleSpecialite(s)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                        className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
                           formData.specialites.includes(s)
-                            ? 'bg-primary text-white border-primary'
-                            : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-primary'
+                            ? 'bg-gray-900 text-white border-gray-900'
+                            : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
                         }`}
                       >
                         {s}
@@ -219,15 +188,10 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
                     <input
                       type="checkbox"
                       checked={formData.consentMarketing}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          consentMarketing: e.target.checked,
-                        })
-                      }
-                      className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                      onChange={(e) => setFormData({ ...formData, consentMarketing: e.target.checked })}
+                      className="mt-0.5"
                     />
-                    <span className="text-xs text-gray-600">
+                    <span className="text-xs text-gray-500">
                       J&apos;accepte de recevoir des emails de conseils et d&apos;orientation
                     </span>
                   </label>
@@ -235,16 +199,11 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
                     <input
                       type="checkbox"
                       checked={formData.consentSms}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          consentSms: e.target.checked,
-                        })
-                      }
-                      className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                      onChange={(e) => setFormData({ ...formData, consentSms: e.target.checked })}
+                      className="mt-0.5"
                     />
-                    <span className="text-xs text-gray-600">
-                      J&apos;accepte de recevoir des SMS (rappels d&apos;examen, conseils)
+                    <span className="text-xs text-gray-500">
+                      J&apos;accepte de recevoir des SMS de rappels
                     </span>
                   </label>
                 </div>
@@ -252,16 +211,16 @@ export function LeadCaptureModal({ isOpen, onClose, trigger }: LeadCaptureModalP
                 <div className="flex gap-2">
                   <button
                     onClick={() => setStep(1)}
-                    className="px-4 py-2.5 text-gray-600 font-medium rounded-lg border border-gray-300 hover:bg-gray-50"
+                    className="px-4 py-2.5 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50"
                   >
                     Retour
                   </button>
                   <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="flex-1 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
+                    className="flex-1 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
                   >
-                    {loading ? 'Inscription...' : 'Créer mon compte gratuit'}
+                    {loading ? 'Inscription...' : 'Creer mon compte'}
                   </button>
                 </div>
               </div>
